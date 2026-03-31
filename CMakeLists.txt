@@ -1,8 +1,23 @@
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+
 cmake_minimum_required(VERSION 3.13)
 
 # Silence harmless macOS SDK warning
 if(APPLE)
     set(CMAKE_OSX_SYSROOT "")
+endif()
+
+set(sdkVersion 2.1.1)
+set(toolchainVersion 14_2_Rel1)
+set(picotoolVersion 2.1.1)
+
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
 endif()
 
 # Set the SDK path
@@ -14,6 +29,15 @@ include(${PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 project(test_project C CXX ASM)
 
 pico_sdk_init()
+
+# Waveshare Pico-OLED-1.3 libraries
+add_subdirectory(third_party/lib/Config)
+add_subdirectory(third_party/lib/Infrared)
+add_subdirectory(third_party/lib/OLED)
+add_subdirectory(third_party/lib/Icm20948)
+add_subdirectory(third_party/lib/LCD)
+add_subdirectory(third_party/lib/Fonts)
+add_subdirectory(third_party/lib/GUI)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
